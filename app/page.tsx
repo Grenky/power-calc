@@ -46,9 +46,19 @@ if(!mounted) return null;
 
   return (
     <main className="max-w-4xl mx-auto p-6 space-y-8 pb-20">
-      <div className="text-center space-y-2 py-10">
+      <div className="text-center space-y-2 py-0">
         <h1 className="text-4x1 font-black tracking-tight">PowerCalc 2026</h1>
         <p className="text-muted-foreground">Твій персональний гід енергозалежності</p>
+        <p className="text-muted-foreground">Розрахуйте точний час роботи вашої станції з урахуванням ККД інвертора та реального споживання приладів.</p>
+      </div>
+      
+      <div className="max-w-2xl mx-auto mt-6 bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+        <div className="flex-shrink-0 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+          <span className="text-xl">💡</span>
+        </div>
+        <p className="text-sm text-slate-600 leading-snug">
+          Ми автоматично врахували **15% втрат** енергії на роботу інвертора. Це робить наш прогноз набагато точнішим за стандартні калькулятори.
+        </p>
       </div>
 
       <div className="bg-card border p-8 rounded-3xl shadow-sm space-y-6">
@@ -61,7 +71,8 @@ if(!mounted) return null;
               <button
               key={v}
               onClick={() => setCapacity(v)}
-              className="px-3 py-1 text-xs bg-secondary hover:bg-primary hover: text-primary-foreground rounded-full transition-colors"
+              className="px-3 py-1 text-xs font-medium text-black bg-secondary hover:bg-primary hover:text-primary-foreground rounded-full transition-colors"
+
               >
                 {v}
               </button>
@@ -76,18 +87,7 @@ if(!mounted) return null;
           />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {APPLIANCES.map((app) => (
-          <ApplianceCard
-          key={app.id}
-          {...app}
-          isActive={activeIds.includes(app.id)}
-          onToggle={() => toggleApliance(app.id)}
-          />
-        ))}
-      </div>
-
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-2xl">
+      <div className="w-full mx-auto mt-12 w-[calc(100%-3rem)] max-w-2xl">
         <div className="bg-primary text-primary-foreground p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-flow items-center justify-between gap-4 border-t border-white/10">
           <div className="text-center sm: text-left">
               <p className="text-xs uppercase tracking-widest opacity-70">Залишилось часу</p>
@@ -99,6 +99,17 @@ if(!mounted) return null;
             <p className="text-2xl font-bold">{totalPower} Вт</p>
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {APPLIANCES.map((app) => (
+          <ApplianceCard
+          key={app.id}
+          {...app}
+          isActive={activeIds.includes(app.id)}
+          onToggle={() => toggleApliance(app.id)}
+          />
+        ))}
       </div>
     </main>  
   );
