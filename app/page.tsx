@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Laptop, Wifi, Lightbulb, Snowflake, Tv, Fan, Coffee } from "lucide-react";
 import { ApplianceCard } from "@/components/ApplianceCard";
 import { Slider } from "@/components/ui/slider";
+import Link from "next/link";
 
 
 const APPLIANCES = [
@@ -111,6 +112,11 @@ if(!mounted) return null;
           />
         ))}
       </div>
+      <footer className="max-w-2xl mx-auto py-10 text-center border-t mt-10">
+        <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+          Політика конфіденційності
+        </Link>
+      </footer>
     </main>  
   );
 }
