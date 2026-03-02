@@ -45,6 +45,12 @@ const updateQuantity = (id: string, delta: number) => {
   }));
 };
 
+const updatePower = (id: string, newPower: number) => {
+  setAppliances(prev => prev.map(app =>
+    app.id === id ? {...app, power: newPower} : app
+  ));
+};
+
 
 const totalPower = appliances.reduce((sum, app) => 
   app.isActive ? sum + (app.power * app.quantity) : sum, 0
@@ -64,6 +70,8 @@ const toggleApliance = (id: string) => {
     prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
   );
 };
+
+
 
 if(!mounted) return null;
 
@@ -131,6 +139,7 @@ if(!mounted) return null;
           {...app}
           onToggle={() => toggleAppliance(app.id)}
           onQuantityChange={(delta) => updateQuantity(app.id, delta)}
+          onPowerChange={(newPower) => updatePower(app.id, newPower)}
           />
         ))}
       </div>

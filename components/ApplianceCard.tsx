@@ -3,6 +3,15 @@
 import { LucideIcon, ChevronUp, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface ApplianceCardProps {
   id: string;
@@ -13,9 +22,21 @@ interface ApplianceCardProps {
   isActive: boolean;
   onToggle: () => void;
   onQuantityChange: (delta: number) => void;
+  onPowerChange: (newPower: number) => void;
 }
 
+const POWER_PRESETS: Record<string, number[]> = {
+  laptop: [45, 65, 90, 100],
+  router: [5, 10, 15, 20],
+  lamp: [5, 9, 12, 15],
+  fridge: [80, 120, 150, 200],
+  tv: [40, 60, 80, 120],
+  fan: [30, 45, 60],
+  coffee: [800, 1200, 1450],
+} 
+
 export function ApplianceCard({
+  id,
   name,
   power,
   quantity,
@@ -23,7 +44,11 @@ export function ApplianceCard({
   isActive,
   onToggle,
   onQuantityChange,
+  onPowerChange,
 }: ApplianceCardProps) {
+  const[isCustom, setIsCustom] = useState(false);
+  const presets = POWER_PRESETS[id] || [power];
+
   return (
     <Card className={`transition-all border-2 ${isActive ? "border-primary bg-primary/5 shadow-sm" : "border-transparent"}`}>
       <CardContent className="p-4 flex items-center justify-between gap-4">
@@ -35,7 +60,45 @@ export function ApplianceCard({
           </div>
           <div className="truncate">
             <p className="text-sm font-bold leading-tight truncate">{name}</p>
-            <p className="text-[10px] text-slate-500">{power} Вт</p>
+            {/* Вибір потужності */}
+            <div onClick={(e) => e.stopPropagation()} className="mt-1">
+              {isCustom ? (
+                <Input
+                type="number"
+                className="h-6 w-20 text-[10px] p-1"
+                defaultValue={power}
+                autoFocus
+                onBlur={(e) => {
+                  onPowerChange(Number(e.target.value));
+                  setIsCustom(false);
+                }}
+                onKeyDown={(e) => {
+                  if(e.key === 'Enter') {
+                    onPowerChange(Number(e.currentTarget.value));
+                    setIsCustom(false);
+                  }
+                }}
+                />
+              ) : (
+                <Select
+                  value={String(power)}
+                  onValueChange={(val) => {
+                    if(val === "custom") setIsCustom(true);
+                    else onPowerChange(Number(val));
+                  }}
+                >
+                  <SelectTrigger className="h-5 w-fit border-none p-0 bg-transperent text=[10px] text-slate-500 hover:text-primary transition-colors focus: ring-0">
+                    <SelectValue>{power} Вт</SelectValue>
+                  </SelectTrigger>
+                <SelectContent>
+                  {presets.map((p) => (
+                    <SelectItem key={p} value={String(p)}>{p} Вт</SelectItem>
+                  ))}
+                  <SelectItem value="custom" className="text-primary font-bold">Своє значення...</SelectItem>
+                </SelectContent>
+              </Select>
+              )}
+            </div>
           </div>
         </div>
 
