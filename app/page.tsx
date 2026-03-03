@@ -5,6 +5,12 @@ import { Laptop, Wifi, Lightbulb, Snowflake, Tv, Fan, Coffee, WashingMachine, Mi
 import { ApplianceCard } from "@/components/ApplianceCard";
 import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const INITIAL_APPLIANCES = [
   { id: "laptop", name: "Ноутбук", power: 60, quantity: 1, icon: Laptop },
@@ -143,6 +149,61 @@ if(!mounted) return null;
           />
         ))}
       </div>
+      <section className="max-w-3xl mx-auto mt-20 space-y-8 px-2">
+        <div className="space-y-4">
+          <h2 className="text-2xl font-black ">Часті питання про роботу зарядних станцій</h2>
+          <p className="text-slate-600 text-sm leading-relaxed">
+            Розрахунок часу роботи EcoFlow, Bluetti чи Jackery залежить від багатьох факторів.
+            Наш калькулятор враховує реальні умови експлуатації, щоб ви не залишилися без світла в невідповідний момент.
+          </p>
+        </div>
+
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="text-left">Чому час роботи менший, ніж заявлено виробником?</AccordionTrigger>
+          <AccordionContent className="text-slate-600 leading-relaxed">
+            Виробники вказують ідеальну ємність акумулятора. Проте при роботі через розетку 220В частина енергії 
+            (близько **10-15%**) витрачається на роботу самого інвертора, який перетворює постійний струм у змінний. 
+            Наш калькулятор автоматично враховує ці втрати для вашої точності.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="text-left">Скільки Вт споживає звичайний холодильник?</AccordionTrigger>
+            <AccordionContent className="text-scale-600">
+              У середньому сучасний холодильник споживає **100-150 Вт**, але лише коли працює компресор. 
+              У режимі очікування споживання мінімальне. Для розрахунку ми рекомендуємо ставити середнє значення 120 Вт.
+            </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="text-left">Чи можна підключати кавомашину чи чайник?</AccordionTrigger>
+          <AccordionContent className="text-scale-600">
+            Лише якщо номінальна потужність вашої станції вища за потужність приладу. 
+            Більшість чайників споживають **1500-2200 Вт**. Якщо у вас станція типу EcoFlow River (600 Вт), 
+            вона просто вимкнеться через перевантаження.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-4">
+          <AccordionTrigger className="text-left">Як дізнатися точну потужність мого пристрою?</AccordionTrigger>
+          <AccordionContent className="text-scale-600">
+            Подивіться на блок живлення або наклейку на самому пристрої (параметр **Input** або **Power**). 
+            Наприклад, блоки живлення ноутбуків зазвичай мають маркування 45W, 65W або 90W. Ви можете ввести 
+            це значення вручну в нашому калькуляторі.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      <div className="bg-slate-900 text-white p-8 rounded-3xl space-y-4 shadow-xl">
+        <h3 className="text-lg font-bold">💡 Порада для економії</h3>
+        <p className="text-slate-300 text-sm leading-relaxed">
+          Щоб станція працювала довше, заряджайте гаджети (телефони, планшети) напряму через порти **USB** або **Type-C**. 
+          Це дозволяє уникнути втрат на роботі інвертора 220В, що додасть вам ще **30-60 хвилин** роботи.
+        </p>
+      </div>
+      </section>
+      
       <footer className="max-w-2xl mx-auto py-10 text-center border-t mt-10">
         <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
           Політика конфіденційності
