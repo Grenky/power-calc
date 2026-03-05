@@ -62,6 +62,8 @@ const totalPower = appliances.reduce((sum, app) =>
   app.isActive ? sum + (app.power * app.quantity) : sum, 0
 );
 
+const isOverloaded = totalPower > capacity;
+
 const runtimeHours = totalPower > 0 ? (capacity * 0.85) / totalPower : 0;
 
 const formatTime = (decimalHours: number) => {
@@ -94,7 +96,7 @@ if(!mounted) return null;
           <span className="text-xl">💡</span>
         </div>
         <p className="text-sm text-slate-600 leading-snug">
-          Ми автоматично врахували **15% втрат** енергії на роботу інвертора. Це робить наш прогноз набагато точнішим за стандартні калькулятори.
+          Ми автоматично врахували <strong>15%</strong> втрат енергії на роботу інвертора. Це робить наш прогноз набагато точнішим за стандартні калькулятори.
         </p>
       </div>
       {/* Налаштування ємності */}
@@ -124,11 +126,19 @@ if(!mounted) return null;
           />
       </div>
       {/* Віджет результату */}
-      <div className="w-full mx-auto mt-12 w-[calc(100%-3rem)] max-w-2xl">
-        <div className="bg-primary text-primary-foreground p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-flow items-center justify-between gap-4 border-t border-white/10">
-          <div className="text-center sm: text-left">
-              <p className="text-xs uppercase tracking-widest opacity-70">Залишилось часу</p>
-              <p className="text-4xl font-black">{formatTime(runtimeHours)}</p>
+      <div className="w-full mx-auto mt-12 w-[calc(100%-3rem)] max-w-2xl space-y-4">
+        <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 ${
+          isOverloaded
+          ? "bg-red-600 text-white border-red-400"
+          : "bg-primary text-primary-foreground border-white/10"
+        }`}>
+          <div className="text-center sm:text-left">
+              <p className="text-xs uppercase tracking-widest opacity-70">
+                {isOverloaded ? "Перевантаження!": "Залишилось часу"}
+              </p>
+              <p className="text-4xl font-black">
+                {isOverloaded ? "⚠" : formatTime(runtimeHours)}
+              </p>
           </div>
           <div className="h-px sm:h-12 w-full sm:w-px bg-white/20" />
           <div className="text-center sm:text-right">
@@ -136,6 +146,18 @@ if(!mounted) return null;
             <p className="text-2xl font-bold">{totalPower} Вт</p>
           </div>
         </div>
+        {/* Сповіщення-порада */}
+        {isOverloaded && (
+          <div className="bg-red-50 border-2 border-red-200 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+            <span className="text-2xl">⚠</span>
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-red-700 leading-snug">
+                Загальна потужність приладів ({totalPower} Вт) перевищує можливості станції ємністю {capacity} Вт·год. 
+                Більшість станцій такого класу мають інвертор до {capacity} Вт. Спробуйте вимкнути потужні прилади (кавомашину, фен) або оберіть станцію більшої ємності.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       {/* Список приладів */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -163,7 +185,7 @@ if(!mounted) return null;
           <AccordionTrigger className="text-left">Чому час роботи менший, ніж заявлено виробником?</AccordionTrigger>
           <AccordionContent className="text-slate-600 leading-relaxed">
             Виробники вказують ідеальну ємність акумулятора. Проте при роботі через розетку 220В частина енергії 
-            (близько **10-15%**) витрачається на роботу самого інвертора, який перетворює постійний струм у змінний. 
+            (близько 10-15%) витрачається на роботу самого інвертора, який перетворює постійний струм у змінний. 
             Наш калькулятор автоматично враховує ці втрати для вашої точності.
           </AccordionContent>
         </AccordionItem>
@@ -171,7 +193,7 @@ if(!mounted) return null;
         <AccordionItem value="item-2">
           <AccordionTrigger className="text-left">Скільки Вт споживає звичайний холодильник?</AccordionTrigger>
             <AccordionContent className="text-scale-600">
-              У середньому сучасний холодильник споживає **100-150 Вт**, але лише коли працює компресор. 
+              У середньому сучасний холодильник споживає 100-150 Вт, але лише коли працює компресор. 
               У режимі очікування споживання мінімальне. Для розрахунку ми рекомендуємо ставити середнє значення 120 Вт.
             </AccordionContent>
         </AccordionItem>
@@ -180,7 +202,7 @@ if(!mounted) return null;
           <AccordionTrigger className="text-left">Чи можна підключати кавомашину чи чайник?</AccordionTrigger>
           <AccordionContent className="text-scale-600">
             Лише якщо номінальна потужність вашої станції вища за потужність приладу. 
-            Більшість чайників споживають **1500-2200 Вт**. Якщо у вас станція типу EcoFlow River (600 Вт), 
+            Більшість чайників споживають 1500-2200 Вт. Якщо у вас станція типу EcoFlow River (600 Вт), 
             вона просто вимкнеться через перевантаження.
           </AccordionContent>
         </AccordionItem>
@@ -188,7 +210,7 @@ if(!mounted) return null;
         <AccordionItem value="item-4">
           <AccordionTrigger className="text-left">Як дізнатися точну потужність мого пристрою?</AccordionTrigger>
           <AccordionContent className="text-scale-600">
-            Подивіться на блок живлення або наклейку на самому пристрої (параметр **Input** або **Power**). 
+            Подивіться на блок живлення або наклейку на самому пристрої (параметр Input або Power). 
             Наприклад, блоки живлення ноутбуків зазвичай мають маркування 45W, 65W або 90W. Ви можете ввести 
             це значення вручну в нашому калькуляторі.
           </AccordionContent>
@@ -198,8 +220,8 @@ if(!mounted) return null;
       <div className="bg-slate-900 text-white p-8 rounded-3xl space-y-4 shadow-xl">
         <h3 className="text-lg font-bold">💡 Порада для економії</h3>
         <p className="text-slate-300 text-sm leading-relaxed">
-          Щоб станція працювала довше, заряджайте гаджети (телефони, планшети) напряму через порти **USB** або **Type-C**. 
-          Це дозволяє уникнути втрат на роботі інвертора 220В, що додасть вам ще **30-60 хвилин** роботи.
+          Щоб станція працювала довше, заряджайте гаджети (телефони, планшети) напряму через порти USB або Type-C. 
+          Це дозволяє уникнути втрат на роботі інвертора 220В, що додасть вам ще 30-60 хвилин роботи.
         </p>
       </div>
       </section>
