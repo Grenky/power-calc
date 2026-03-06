@@ -23,6 +23,7 @@ interface ApplianceCardProps {
   onToggle: () => void;
   onQuantityChange: (delta: number) => void;
   onPowerChange: (newPower: number) => void;
+  onNameChange: (newName: string) => void;
 }
 
 const POWER_PRESETS: Record<string, number[]> = {
@@ -45,9 +46,11 @@ export function ApplianceCard({
   onToggle,
   onQuantityChange,
   onPowerChange,
+  onNameChange,
 }: ApplianceCardProps) {
   const[isCustom, setIsCustom] = useState(false);
   const presets = POWER_PRESETS[id] || [power];
+  const[isEditingName, setIsEditingName] = useState(false);
 
   return (
     <Card className={`transition-all border-2 ${isActive ? "border-primary bg-primary/5 shadow-sm" : "border-transparent"}`}>
@@ -58,8 +61,33 @@ export function ApplianceCard({
           <div className={`p-2 rounded-xl flex-shrink-0 ${isActive ? "bg-primary text-white" : "bg-slate-100 text-slate-400"}`}>
             <Icon size={20} />
           </div>
+
           <div className="truncate">
-            <p className="text-sm font-bold leading-tight truncate">{name}</p>
+            {isEditingName ? (
+              <Input
+                autoFocus
+                className="h-7 w-full  text-sm font-bold p-1 border-primary"
+                defaultValue={name}
+                onBlur={(e) => {
+                  onNameChange?.(e.target.value || name);
+                  setIsEditingName(false);
+                }}
+                onKeyDown={(e) => {
+                  if(e.key === 'Enter') {
+                    onNameChange?.(e.currentTarget.value || name);
+                    setIsEditingName(false);
+                  }
+                }}
+              />
+            ) : (
+              <h3 
+                onClick={() => setIsEditingName(true)}
+                className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name"
+              >
+                {name}
+                <span className="opacity-0 group-hover/name:opacity-50 text-[10px] ">✎</span>
+              </h3> 
+            )}
             {/* Вибір потужності */}
             <div onClick={(e) => e.stopPropagation()} className="mt-1">
               {isCustom ? (

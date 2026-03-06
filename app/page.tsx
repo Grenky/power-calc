@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Laptop, Wifi, Lightbulb, Snowflake, Tv, Fan, Coffee, WashingMachine, Microwave } from "lucide-react";
+import { Laptop, Wifi, Lightbulb, Snowflake, Tv, Fan, Coffee, WashingMachine, Microwave, Trash2 } from "lucide-react";
 import { ApplianceCard } from "@/components/ApplianceCard";
 import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
@@ -12,6 +12,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+interface Appliance {
+  id: string;
+  name: string;
+  power: number;
+  quantity: number;
+  isActive: boolean;
+  icon: any; 
+}
+
 const INITIAL_APPLIANCES = [
   { id: "laptop", name: "Ноутбук", power: 60, quantity: 1, icon: Laptop },
   { id: "router", name: "Роутер", power: 15, quantity: 1, icon: Wifi },
@@ -19,18 +28,31 @@ const INITIAL_APPLIANCES = [
   { id: "fridge", name: "Холодильник", power: 120, quantity: 1, icon: Snowflake },
   { id: "tv", name: "Телевізор", power: 80, quantity: 1, icon: Tv },
   {id: "fan", name: "Вентилятор", power: 45, quantity: 1, icon: Fan},
-  {id: "coffe", name: "Кавомашина", power: 1200, quantity: 1, icon: Coffee},
+  {id: "coffee", name: "Кавомашина", power: 1200, quantity: 1, icon: Coffee},
   {id: "washingm", name: "Пральна Машина", power: 2400, quantity: 1, icon: WashingMachine},
   {id: "microwave", name: "Мікрохвильовка", power: 1100, quantity: 1, icon: Microwave},
 ];
 
 export default function Home() {
 const[capacity, setCapacity] = useState(512);
-const[activeIds, setActiveIds] = useState<string[]>([]);
 const[mounted, setMounted] = useState(false);
-const[appliances, setAppliances] = useState(
-  INITIAL_APPLIANCES.map(app => ({ ...app, isActive: false }))
-)
+const[appliances, setAppliances] = useState<Appliance[]>(() => {
+    if(typeof window === "undefined") return INITIAL_APPLIANCES.map(app => ({...app, isActive: false}));
+
+    const saved = localStorage.getItem('user-appliances');
+    if(saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((app: any) => ({
+          ...app,
+          icon: INITIAL_APPLIANCES.find(i => i.id === app.id)?.icon || Lightbulb
+        }));
+      } catch (e) {
+        return INITIAL_APPLIANCES.map(app => ({ ...app, isActive: false }));
+      }
+    }
+    return INITIAL_APPLIANCES.map(app => ({ ...app, isActive: false }));
+});
 
 useEffect(() => {setMounted(true); }, []);
 
@@ -51,12 +73,22 @@ const updateQuantity = (id: string, delta: number) => {
   }));
 };
 
+
 const updatePower = (id: string, newPower: number) => {
   setAppliances(prev => prev.map(app =>
     app.id === id ? {...app, power: newPower} : app
   ));
 };
 
+const updateName = (id: string, newName: string) => {
+  setAppliances(prev => prev.map(app => 
+    app.id === id ? { ...app, name: newName } : app
+  ));
+};
+
+const removeAppliance = (id: string) => { 
+  setAppliances(prev => prev.filter(app => app.id !== id));
+};
 
 const totalPower = appliances.reduce((sum, app) => 
   app.isActive ? sum + (app.power * app.quantity) : sum, 0
@@ -73,13 +105,25 @@ const formatTime = (decimalHours: number) => {
   return m > 0 ? `${h} год ${m} хв` : `${h} год`;
 }
 
-const toggleApliance = (id: string) => {
-  setActiveIds((prev) => 
-    prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-  );
-};
+
+const addCustomAppliance = () => {
+  const newApp = {
+    id: `custom-${Date.now()}`,
+    name: "Мій пристрій",
+    power: 0,
+    quantity: 1,
+    isActive: true,
+    icon: Lightbulb,
+  }
+  setAppliances((prev) => [...prev, newApp]);
+}
 
 
+useEffect(() => {
+  if(mounted) {
+    localStorage.setItem('user-appliances', JSON.stringify(appliances));
+  }
+}, [appliances ,mounted]);  
 
 if(!mounted) return null;
 
@@ -161,15 +205,40 @@ if(!mounted) return null;
       </div>
       {/* Список приладів */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {appliances.map((app) => (
+        {appliances.map((app: Appliance) => (
+        <div key={app.id} className="relative group">
           <ApplianceCard
-          key={app.id}
           {...app}
           onToggle={() => toggleAppliance(app.id)}
           onQuantityChange={(delta) => updateQuantity(app.id, delta)}
           onPowerChange={(newPower) => updatePower(app.id, newPower)}
+          onNameChange={(newName) => updateName(app.id, newName)}
           />
+        {app.id.startsWith('custom-') && (
+          <button
+          onClick={() => removeAppliance(app.id)}
+          className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all border border-red-100 hover:bg-red-50 z-10"
+          title="Видалити прилад"
+          >
+          <Trash2 size={14} />
+          </button>
+          )}
+          </div>
         ))}
+        <button
+          onClick={addCustomAppliance}
+          className="flex felx-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[140px] bg-slate-50/40"
+        >
+          <div className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all mb-4 border border-slate-100">
+            <span className="text-3xl font-light leading-none relative -top-[3px]">+</span>
+          </div>
+          <div className="text-center space-y-1 ml-5">
+            <p className="text-xs font-black text-slate-500 uppercase tracking-[0.1em] group-hover:text-primary transition-colors">
+              Додати свій
+            </p>
+            <p className="text-[10px] text-slate-400 font-medium">Тільки для вас</p>
+          </div>
+        </button>
       </div>
       <section className="max-w-3xl mx-auto mt-20 space-y-8 px-2">
         <div className="space-y-4">
