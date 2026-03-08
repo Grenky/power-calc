@@ -36,6 +36,7 @@ const INITIAL_APPLIANCES = [
 export default function Home() {
 const[capacity, setCapacity] = useState(512);
 const[mounted, setMounted] = useState(false);
+const[chargePercent, setChargePercent] = useState(100);
 const[appliances, setAppliances] = useState<Appliance[]>(() => {
     if(typeof window === "undefined") return INITIAL_APPLIANCES.map(app => ({...app, isActive: false}));
 
@@ -53,6 +54,8 @@ const[appliances, setAppliances] = useState<Appliance[]>(() => {
     }
     return INITIAL_APPLIANCES.map(app => ({ ...app, isActive: false }));
 });
+
+
 
 useEffect(() => {setMounted(true); }, []);
 
@@ -96,6 +99,7 @@ const totalPower = appliances.reduce((sum, app) =>
 
 const isOverloaded = totalPower > capacity;
 
+const currentEnergy = (capacity * (chargePercent / 100));
 const runtimeHours = totalPower > 0 ? (capacity * 0.85) / totalPower : 0;
 
 const formatTime = (decimalHours: number) => {
@@ -144,30 +148,78 @@ if(!mounted) return null;
         </p>
       </div>
       {/* Налаштування ємності */}
-      <div className="bg-card border p-8 rounded-3xl shadow-sm space-y-6">
-        <div className="space-y-1">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Ємність станції</h2>
-          <p className="text-3xl font-bold">{capacity} <span className="text-lg font-medium text-muted-foreground">Вт·год</span></p>
-        </div>
-        <div className="flex gap-2">
-            {[256, 512, 1024, 2048].map(v => (
-              <button
-              key={v}
-              onClick={() => setCapacity(v)}
-              className="px-3 py-1 text-xs font-medium text-black bg-secondary hover:bg-primary hover:text-primary-foreground rounded-full transition-colors"
+      <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-slate-800 flex flex-col md:flex-row items-center gap-10 transition-all"> 
+        {/* ЛІВА ЧАСТИНА: Слайдери */}
+        <div className="flex-1 space-y-8 w-full">
+          <div className="space-y-1">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-500">Налаштування станції</h2>
+            <p className="text-xl font-medium opacity-90">Параметри живлення</p>
+          </div>
 
-              >
-                {v}
-              </button>
-            ))}
+          {/* Слайдер Ємності */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <p className="text-[10px] uppercase font-bold opacity-50 tracking-widest">Повна ємність</p>
+              <p className="text-sm font-mono">{capacity} <span className="opacity-50">Wh</span></p>
+            </div>
+            <Slider 
+              value={[capacity]} 
+              onValueChange={(v) => setCapacity(v[0])} 
+              max={3000} 
+              step={10} 
+              className="py-2"
+            />
+          </div>
+          
+          {/* Слайдер Заряду */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <p className="text-[10px] uppercase font-bold opacity-50 tracking-widest">Поточний заряд</p>
+              <p className="text-sm font-mono text-cyan-400">{chargePercent}%</p>
+            </div>
+            <Slider 
+              value={[chargePercent]} 
+              onValueChange={(v) => setChargePercent(v[0])} 
+              max={100} 
+              step={1} 
+              className="py-2"
+            />
+          </div>
         </div>
-        <Slider 
-          value={[capacity]}
-          onValueChange={(v) => setCapacity(v[0])}
-          max={2000}
-          step={10}
-          className="py-4"
-          />
+
+        {/* ПРАВА ЧАСТИНА: Круговий індикатор */}
+        <div className="relative flex items-center justify-center flex-shrink-0 bg-slate-800/30 p-6 rounded-3xl border border-white/5">
+          <svg className="w-44 h-44 transform -rotate-90">
+            {/* Фонове коло */}
+            <circle
+              cx="88" cy="88" r="78"
+              stroke="currentColor"
+              strokeWidth="12"
+              fill="transparent"
+              className="text-slate-800"
+            />
+            {/* Активний прогрес */}
+            <circle
+              cx="88" cy="88" r="78"
+              stroke="currentColor"
+              strokeWidth="12"
+              fill="transparent"
+              strokeDasharray={490} 
+              strokeDashoffset={490 - (490 * chargePercent) / 100}
+              strokeLinecap="round"
+              className={`transition-all duration-1000 ease-out ${
+                chargePercent > 50 ? "text-cyan-400" : 
+                chargePercent > 20 ? "text-yellow-400" : "text-red-500"
+              }`}
+            />
+          </svg>
+          
+          {/* Текст всередині */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-4xl font-black tracking-tighter leading-none">{chargePercent}%</span>
+            <span className="text-[10px] uppercase font-bold opacity-40 mt-1">Battery</span>
+          </div>
+        </div>
       </div>
       {/* Віджет результату */}
       <div className="w-full mx-auto mt-12 w-[calc(100%-3rem)] max-w-2xl space-y-4">
