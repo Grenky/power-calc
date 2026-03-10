@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ChatBot from "@/components/ChatBot";
 
 interface Appliance {
   id: string;
@@ -100,7 +101,7 @@ const totalPower = appliances.reduce((sum, app) =>
 const isOverloaded = totalPower > capacity;
 
 const currentEnergy = (capacity * (chargePercent / 100));
-const runtimeHours = totalPower > 0 ? (capacity * 0.85) / totalPower : 0;
+const runtimeHours = totalPower > 0 ? (currentEnergy * 0.85) / totalPower : 0;
 
 const formatTime = (decimalHours: number) => {
   if(decimalHours === 0) return "0 год";
@@ -352,6 +353,7 @@ if(!mounted) return null;
           Політика конфіденційності
         </Link>
       </footer>
+      <ChatBot />
     </main>  
   );
 }
