@@ -34,6 +34,8 @@ const POWER_PRESETS: Record<string, number[]> = {
   tv: [40, 60, 80, 120],
   fan: [30, 45, 60],
   coffee: [800, 1200, 1450],
+  washingm: [2000, 2400],
+  microwave: [600, 800, 1000, 1100, 1200]
 } 
 
 export function ApplianceCard({
@@ -116,7 +118,7 @@ export function ApplianceCard({
                   }}
                 >
                   <SelectTrigger className="h-5 w-fit border-none p-0 bg-transperent text=[10px] text-slate-500 hover:text-primary transition-colors focus: ring-0">
-                    <SelectValue>{power} Вт</SelectValue>
+                    <SelectValue placeholder={`${power} Вт`} />
                   </SelectTrigger>
                 <SelectContent>
                   {presets.map((p) => (
