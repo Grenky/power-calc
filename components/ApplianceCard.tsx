@@ -69,7 +69,7 @@ export function ApplianceCard({
               <Input
                 autoFocus
                 className="h-7 w-full  text-sm font-bold p-1 border-primary"
-                defaultValue={name}
+                defaultValue={power || ""}
                 onBlur={(e) => {
                   onNameChange?.(e.target.value || name);
                   setIsEditingName(false);
@@ -96,7 +96,7 @@ export function ApplianceCard({
                 <Input
                 type="number"
                 className="h-6 w-20 text-[10px] p-1"
-                defaultValue={power}
+                defaultValue={power || ""}
                 autoFocus
                 onBlur={(e) => {
                   onPowerChange(Number(e.target.value));
@@ -121,8 +121,8 @@ export function ApplianceCard({
                     <SelectValue placeholder={`${power} Вт`} />
                   </SelectTrigger>
                 <SelectContent>
-                  {presets.map((p) => (
-                    <SelectItem key={p} value={String(p)}>{p} Вт</SelectItem>
+                  {presets.map((p, i) => (
+                    <SelectItem key={`${id}-${p}-${i}`} value={String(p)}>{p} Вт</SelectItem>
                   ))}
                   <SelectItem value="custom" className="text-primary font-bold">Своє значення...</SelectItem>
                 </SelectContent>

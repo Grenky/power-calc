@@ -114,8 +114,8 @@ const formatTime = (decimalHours: number) => {
 const addCustomAppliance = () => {
   const newApp = {
     id: `custom-${Date.now()}`,
-    name: "Мій пристрій",
-    power: 0,
+    name: "Пристрій",
+    power: undefined as any,
     quantity: 1,
     isActive: true,
     icon: Lightbulb,
@@ -258,8 +258,8 @@ if(!mounted) return null;
       </div>
       {/* Список приладів */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {appliances.map((app: Appliance) => (
-        <div key={app.id} className="relative group">
+        {appliances.map((app, index) => (
+        <div key={`${app.id}-${index}`} className="relative group">
           <ApplianceCard
           {...app}
           onToggle={() => toggleAppliance(app.id)}
@@ -270,7 +270,7 @@ if(!mounted) return null;
         {app.id.startsWith('custom-') && (
           <button
           onClick={() => removeAppliance(app.id)}
-          className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all border border-red-100 hover:bg-red-50 z-10"
+          className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full shadow-md border border-red-100 hover:bg-red-50 z-10 transition-all opacity-100 lg:opacity-0 lg:opacity-0 lg:group-0 lg:group-hover:opacity-100"
           title="Видалити прилад"
           >
           <Trash2 size={14} />
