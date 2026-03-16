@@ -282,7 +282,7 @@ if(!mounted) return null;
           onClick={addCustomAppliance}
           className="flex felx-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[140px] bg-slate-50/40"
         >
-          <div className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all mb-4 border border-slate-100">
+          <div className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all mb-4 border border-slate-100 cursor-pointer">
             <span className="text-3xl font-light leading-none relative -top-[3px]">+</span>
           </div>
           <div className="text-center space-y-1 ml-5">

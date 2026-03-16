@@ -158,6 +158,7 @@ export function ApplianceCard({
           <Switch 
             checked={isActive} 
             onCheckedChange={onToggle} 
+            className="cursor-pointer"
           />
         </div>
 

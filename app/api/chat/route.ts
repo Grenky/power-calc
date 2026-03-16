@@ -15,7 +15,15 @@ export async function POST(req: Request) {
             throw new Error("API ключ не знайдено в .env.local");
         }
 
-        const systemPrompt = "Ти спеціаліст із зарядних станцій EcoFlow та Bluetti. Відповідай українською мовою. Допомагай користувачу розрахувати час роботи приладів від станцій.";
+        const systemPrompt = `
+            Ти — лаконічний асистент PowerCalc. 
+            Твоє завдання: допомагати з розрахунками енергії.
+            ПРАВИЛА:
+            1. Відповідай максимально коротко (1-3 речення). Тільки суть.
+            2. ЗАБОРОНЕНО використовувати символи "*" (зірочки) для виділення тексту. Використовуй тільки чистий текст.
+            3. Не пиши вступів ("Привіт! Я радий допомогти...") та підсумків. Відразу до справи.
+            4. Якщо запитання не стосується енергетики чи приладів — коротко відмов.
+        `;
 
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey}`,
@@ -35,8 +43,9 @@ export async function POST(req: Request) {
                         },
                     ],
                     generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 1000,
+                        stopSequences: ["*"],
+                        temperature: 0.5,
+                        maxOutputTokens: 150,
                     },
                 }),
             }

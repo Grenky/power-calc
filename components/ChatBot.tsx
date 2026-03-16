@@ -38,7 +38,7 @@ export default function ChatBot() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white p-4 rounded-full shadow-2xl transitin-all hover: scale-110 active:scale-95"
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white p-4 rounded-full shadow-2xl transitin-all hover: scale-110 active:scale-95 cursor-pointer"
                     >
                         <MessageCircle size={28} />
                     </button>
@@ -48,7 +48,7 @@ export default function ChatBot() {
                     <div className="bg-slate-800 p-4 flex jusify-between items-center border-b border-white/5">
                         <div className="flex items-center gap-2 text-cyan-400">
                             <Bot size={20} />
-                            <span className="font-bold text-sm tracking-widest uppercase">Power AI</span>
+                            <span className="font-bold text-sm tracking-widest uppercase">PowerCalc AI Assistent</span>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white">
                             <X size={24} />
@@ -79,7 +79,7 @@ export default function ChatBot() {
                         placeholder="Яка ємність у Delta 2?"
                         className="flex-1 bg-slate-900 border-none rounded-xl px-3 py-2 text-sm focus:ring-1 focus:ring-cyan-500 outline-none text-white"
                     />
-                    <button onClick={sendMessage} className="bg-cyan-500 p-2 rounded-xl text-white">
+                    <button onClick={sendMessage} className="bg-cyan-500 p-2 rounded-xl text-white cursor-pointer">
                         <Send size={18} />
                     </button>
                 </div>
