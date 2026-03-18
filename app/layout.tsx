@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "Калькулятор зарядної станції — на скільки вистачить EcoFlow, Bluetti",
@@ -22,9 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uk">
+    <html lang="uk" suppressHydrationWarning>
       <body className="antialiased font-sans">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import ChatBot from "@/components/ChatBot";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Appliance {
   id: string;
@@ -134,6 +135,9 @@ if(!mounted) return null;
 
   return (
     <main className="max-w-4xl mx-auto p-6 space-y-8 pb-20">
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-50">
+        <ThemeToggle />
+      </div>
       <div className="text-center space-y-2 py-0">
         <h1 className="text-4x1 font-black tracking-tight">PowerCalc 2026</h1>
         <p className="text-muted-foreground">Твій персональний гід енергозалежності</p>
@@ -149,7 +153,7 @@ if(!mounted) return null;
         </p>
       </div>
       {/* Налаштування ємності */}
-      <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-slate-800 flex flex-col md:flex-row items-center gap-10 transition-all"> 
+      <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-slate-800 flex flex-col md:flex-row items-center gap-10 transition-all dark:bg-slate-900/50 backdrop-blur-sm dark:border-slate-800"> 
         {/* ЛІВА ЧАСТИНА: Слайдери */}
         <div className="flex-1 space-y-8 w-full">
           <div className="space-y-1">
@@ -224,12 +228,12 @@ if(!mounted) return null;
       </div>
       {/* Віджет результату */}
       <div className="w-full mx-auto mt-12 w-[calc(100%-3rem)] max-w-2xl space-y-4">
-        <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 ${
+        <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 dark:bg-slate-900/50 dark:border-slate-800 backdrop-blur-md ${
           isOverloaded
           ? "bg-red-600 text-white border-red-400"
           : "bg-primary text-primary-foreground border-white/10"
         }`}>
-          <div className="text-center sm:text-left">
+          <div className="text-center sm:text-left dark:text-slate-400">
               <p className="text-xs uppercase tracking-widest opacity-70">
                 {isOverloaded ? "Перевантаження!": "Залишилось часу"}
               </p>
@@ -237,8 +241,8 @@ if(!mounted) return null;
                 {isOverloaded ? "⚠" : formatTime(runtimeHours)}
               </p>
           </div>
-          <div className="h-px sm:h-12 w-full sm:w-px bg-white/20" />
-          <div className="text-center sm:text-right">
+          <div className="h-px sm:h-12 w-full sm:w-px bg-white/20 " />
+          <div className="text-center sm:text-right dark:text-slate-400">
             <p className="text-xs uppercase tracking-widest opacity-70">Навантаження</p>
             <p className="text-2xl font-bold">{totalPower} Вт</p>
           </div>
@@ -280,10 +284,12 @@ if(!mounted) return null;
         ))}
         <button
           onClick={addCustomAppliance}
-          className="flex felx-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[140px] bg-slate-50/40"
+          className="flex felx-col items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-3xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[140px] bg-slate-50/40
+          dark:border-slate-800 dark:bg-slate-900/20 dark:hover:bg-slate-900/40 dark:hover:border-blue-500  
+          "
         >
           <div className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all mb-4 border border-slate-100 cursor-pointer">
-            <span className="text-3xl font-light leading-none relative -top-[3px]">+</span>
+            <span className="text-3xl font-light leading-none relative -top-[3px] dark:text-black">+</span>
           </div>
           <div className="text-center space-y-1 ml-5">
             <p className="text-xs font-black text-slate-500 uppercase tracking-[0.1em] group-hover:text-primary transition-colors">

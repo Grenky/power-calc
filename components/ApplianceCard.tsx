@@ -84,7 +84,7 @@ export function ApplianceCard({
             ) : (
               <h3 
                 onClick={() => setIsEditingName(true)}
-                className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name"
+                className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name dark:text-white"
               >
                 {name}
                 <span className="opacity-0 group-hover/name:opacity-50 text-[10px] ">✎</span>
