@@ -31,5 +31,5 @@ export function ThemeToggle() {
                 <Moon className="w-5 h-5 text-yellow-600 group-hover:-rotate-12 transition-transform" />
             )}
         </button>
-    )
+    );
 }
