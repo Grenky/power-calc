@@ -59,7 +59,7 @@ export function ApplianceCard({
       <CardContent className="p-4 flex items-center justify-between gap-4">
         
         {/* ЛІВА ЧАСТИНА: Іконка + Текст */}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="flex items-center gap-3 flex-1 min-w-0 dark:text-slate-400">
           <div className={`p-2 rounded-xl flex-shrink-0 ${isActive ? "bg-primary text-white" : "bg-slate-100 text-slate-400"}`}>
             <Icon size={20} />
           </div>
@@ -84,7 +84,7 @@ export function ApplianceCard({
             ) : (
               <h3 
                 onClick={() => setIsEditingName(true)}
-                className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name dark:text-white"
+                className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name dark:text-slate-400"
               >
                 {name}
                 <span className="opacity-0 group-hover/name:opacity-50 text-[10px] ">✎</span>
