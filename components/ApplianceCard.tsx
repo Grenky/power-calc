@@ -54,6 +54,8 @@ export function ApplianceCard({
   const presets = POWER_PRESETS[id] || [power];
   const[isEditingName, setIsEditingName] = useState(false);
 
+  const isDefaultAppliance = Object.keys(POWER_PRESETS).includes(id);
+
   return (
     <Card className={`transition-all border-2 ${isActive ? "border-primary bg-primary/5 shadow-sm" : "border-transparent"}`}>
       <CardContent className="p-4 flex items-center justify-between gap-4">
@@ -65,7 +67,7 @@ export function ApplianceCard({
           </div>
 
           <div className="truncate">
-            {isEditingName ? (
+            {isEditingName && !isDefaultAppliance ? (
               <Input
                 autoFocus
                 className="h-7 w-full  text-sm font-bold p-1 border-primary"
@@ -83,7 +85,7 @@ export function ApplianceCard({
               />
             ) : (
               <h3 
-                onClick={() => setIsEditingName(true)}
+                onClick={() => !isDefaultAppliance && setIsEditingName(true)}
                 className="text-sm font-bold text-slate-900 truncate cursor-pointer hover:text-primary flex items-center gap-1 group/name dark:text-slate-400"
               >
                 {name}
