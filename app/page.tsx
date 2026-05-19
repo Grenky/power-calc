@@ -273,7 +273,7 @@ export default function Home() {
         <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 dark:bg-slate-900/50 dark:border-slate-800 backdrop-blur-md ${
           isOverloaded
           ? "bg-red-600 text-white border-red-400"
-          : "bg-primary text-primary-foreground border-white/10"
+          : "bg-slate-900 text-white border-white/10 dark:bg-blue-600 dark:text-white"
         }`}>
           <div className="text-center sm:text-left">
             <p className="text-xs uppercase tracking-widest opacity-70">
