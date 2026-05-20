@@ -270,37 +270,56 @@ export default function Home() {
       </div>
 
       <div className="w-full mx-auto mt-12 max-w-2xl space-y-4 px-4 sm:px-0">
-        <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 dark:bg-slate-900/50 dark:border-slate-800 backdrop-blur-md ${
+        <div className={`p-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-t transition-colors duration-500 backdrop-blur-md ${
           isOverloaded
-          ? "bg-red-600 text-white border-red-400"
-          : "bg-slate-900 text-white border-white/10 dark:bg-blue-600 dark:text-white"
+            ? "bg-red-600 text-white border-red-400"
+            : (!isStation && totalPower > 0 && generatorRunTime < 3)
+            ? "bg-orange-600 text-white border-orange-400"
+            : "bg-slate-900 text-white border-white/10 dark:bg-blue-1000"
         }`}>
           <div className="text-center sm:text-left">
-            <p className="text-xs uppercase tracking-widest opacity-70">
+            <p className="text-xs uppercase tracking-widest opacity-80 text-white">
               {isOverloaded ? "Перевантаження!" : "Залишилось часу"}
             </p>
-            <div className="text-4xl font-black">
+            <div className="text-4xl font-black text-white">
               {isStation 
                 ? (isOverloaded ? "⚠" : formatTime(runtimeHours)) 
                 : formatTime(generatorRunTime)
               }
             </div>
           </div>
+
           <div className="h-px sm:h-12 w-full sm:w-px bg-white/20" />
+
           <div className="text-center sm:text-right">
-            <p className="text-xs uppercase tracking-widest opacity-70">Навантаження</p>
-            <p className="text-2xl font-bold">{totalPower} Вт</p>
+            <p className="text-xs uppercase tracking-widest opacity-80 text-white">Навантаження</p>
+            <p className="text-2xl font-bold text-white">{totalPower} Вт</p>
           </div>
         </div>
 
-        {isOverloaded && (
-          <div className="bg-red-50 border-2 border-red-200 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 dark:bg-red-900/20 dark:border-red-900/30">
-            <span className="text-2xl">⚠</span>
-            <p className="text-sm font-bold text-red-700 dark:text-red-400 leading-snug">
-              Потужність приладів ({totalPower} Вт) перевищує можливості станції. Спробуйте вимкнути енергоємні пристрої.
-            </p>
-          </div>
-        )}
+        {/* БЛОК ПОПЕРЕДЖЕНЬ */}
+        <div className="space-y-3">
+          {/* Попередження для Станції */}
+          {isStation && isOverloaded && (
+            <div className="bg-red-50 border-2 border-red-200 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 dark:bg-red-900/20 dark:border-red-900/30">
+              <span className="text-2xl">⚠</span>
+              <p className="text-sm font-bold text-red-700 dark:text-red-400 leading-snug">
+                Потужність приладів ({totalPower} Вт) перевищує можливості станції. Спробуйте вимкнути енергоємні пристрої.
+              </p>
+            </div>
+          )}
+
+          {/* Попередження для Генератора */}
+          {!isStation && totalPower > 0 && generatorRunTime < 3 && (
+            <div className="bg-orange-50 border-2 border-orange-200 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 dark:bg-orange-900/20 dark:border-orange-900/30">
+              <span className="text-2xl">⛽</span>
+              <p className="text-sm font-bold text-orange-700 dark:text-orange-400 leading-snug">
+                Високе навантаження! При такому споживанні паливо закінчиться швидше ніж за 3 години ({formatTime(generatorRunTime)}). 
+                Вимкніть некритичні прилади для економії.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
