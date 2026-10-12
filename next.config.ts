@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
             value: 'power-calc-omega.vercel.app',
           },
         ],
-        destination: 'https://powercalc.digital*',
+        destination: 'https://powercalc.digital/:path*',
         permanent: true,
       }
     ]
