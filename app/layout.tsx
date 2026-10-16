@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     "калькулятор блекліауту",
     "розрахунок генератора",
     "резервне живлення для будинку",
+    "ecoflow calculator",
+    "bluetti calculator",
+    "power station calculator",
+    "калькулятор ватт",
+    "розрахунок потужності зарядної станції",
   ],
   alternates: {
     canonical: "https://powercalc.digital",
